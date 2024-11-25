@@ -1,0 +1,15 @@
+meta {
+  name: Get random
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8080/api/anime/random?genres=Adventure,Drama
+  body: none
+  auth: none
+}
+
+query {
+  genres: Adventure,Drama
+}
