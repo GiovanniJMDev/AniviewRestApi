@@ -1,5 +1,5 @@
+/* Start of Selection */
 package com.aniview.aniview.Service;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.aniview.aniview.Entity.Anime;
 import com.aniview.aniview.Repository.AnimeRepository;
 
-@Service // This annotation makes this class a Spring-managed bean.
+@Service // Esta anotación convierte esta clase en un bean gestionado por Spring.
 public class AnimeService {
 
     private final AnimeRepository animeRepository;
@@ -31,23 +31,22 @@ public class AnimeService {
     }
 
     public List<Anime> findByGenre(String genre) {
-        System.out.println("genre: "+genre);
+        System.out.println("genre: " + genre);
         if (genre == null || genre.isEmpty()) {
             throw new IllegalArgumentException("Debe seleccionar un género.");
         }
-    
+
         List<Anime> allAnimes = animeRepository.findAll();
         List<Anime> filteredAnimes = allAnimes.stream()
                 .filter(anime -> anime.getGenres().contains(genre))
                 .collect(Collectors.toList());
-    
+
         if (filteredAnimes.isEmpty()) {
             throw new IllegalArgumentException("El género proporcionado no es válido o no tiene animes asociados.");
         }
-    
+
         return filteredAnimes;
     }
-    
 
     public Optional<Anime> findRandomAnimeByGenres(List<String> genres) {
         if (genres == null || genres.isEmpty()) {
@@ -69,4 +68,23 @@ public class AnimeService {
         return Optional.of(matchingAnimes.get(random.nextInt(matchingAnimes.size())));
     }
 
+    public Anime addAnime(Anime anime) {
+        return animeRepository.save(anime);
+    }
+
+    public Optional<Anime> updateAnime(Long id, Anime anime) {
+        return animeRepository.findById(id).map(existingAnime -> {
+            existingAnime.setTitle(anime.getTitle());
+            existingAnime.setGenres(anime.getGenres());
+            return animeRepository.save(existingAnime);
+        });
+    }
+
+    public boolean deleteAnime(Long id) {
+        return animeRepository.findById(id).map(anime -> {
+            animeRepository.delete(anime);
+            return true;
+        }).orElse(false);
+    }
 }
+/* End of Selection */

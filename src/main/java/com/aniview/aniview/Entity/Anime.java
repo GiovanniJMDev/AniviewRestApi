@@ -1,14 +1,16 @@
 package com.aniview.aniview.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.List;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.List;
-import java.util.Map;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "anime")
@@ -57,7 +59,13 @@ public class Anime {
     @Column(name = "weekly_views", nullable = false)
     private Integer weeklyViews;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public Anime() {
+        this.totalViews = 0;
+        this.weeklyViews = 0;
+    }
 
     public String getTitle() {
         return title;

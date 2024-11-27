@@ -1,0 +1,25 @@
+meta {
+  name: Update Anime
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:8080/api/anime/16
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "title": "Mi Nuevo Anime 2",
+      "image": "https://ejemplo.com/imagen.jpg",
+      "genres": ["Action", "Adventure"],
+      "description": "Una nueva serie de anime emocionante",
+      "rating": 4.5,
+    "seasons": 1,
+    "yearStarted": 2014,
+      "platforms": ["Crunchyroll", "Netflix"],
+      "episodesPerSeason": [12] 
+  }
+}

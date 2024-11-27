@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.aniview.aniview.Entity.Anime;
 import com.aniview.aniview.Service.AnimeService;
@@ -41,7 +37,6 @@ public class AnimeController {
         return ResponseEntity.badRequest().body("Debe seleccionar un género.");
     }
 
-
     @GetMapping("/genre/{genre}")
     public ResponseEntity<?> getAnimesByGenre(@PathVariable String genre) {
         try {
@@ -57,5 +52,27 @@ public class AnimeController {
         return animeService.findRandomAnimeByGenres(genres)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Anime> addAnime(@RequestBody Anime anime) {
+        Anime createdAnime = animeService.addAnime(anime);
+        return ResponseEntity.ok(createdAnime);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Anime> updateAnime(@PathVariable Long id, @RequestBody Anime anime) {
+        return animeService.updateAnime(id, anime)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnime(@PathVariable Long id) {
+        if (animeService.deleteAnime(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
