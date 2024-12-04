@@ -1,4 +1,3 @@
-/* Start of Selection */
 package com.aniview.aniview.Service;
 
 import java.util.List;
@@ -76,6 +75,12 @@ public class AnimeService {
         return animeRepository.findById(id).map(existingAnime -> {
             existingAnime.setTitle(anime.getTitle());
             existingAnime.setGenres(anime.getGenres());
+            existingAnime.setDescription(anime.getDescription());
+            existingAnime.setImage(anime.getImage());
+            existingAnime.setRating(anime.getRating());
+            existingAnime.setSeasons(anime.getSeasons());
+            existingAnime.setYearStarted(anime.getYearStarted());
+            existingAnime.setYearEnded(anime.getYearEnded());
             return animeRepository.save(existingAnime);
         });
     }
@@ -86,5 +91,4 @@ public class AnimeService {
             return true;
         }).orElse(false);
     }
-}
-/* End of Selection */
+}/* End of Selection */
