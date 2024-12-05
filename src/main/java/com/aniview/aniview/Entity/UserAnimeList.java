@@ -3,6 +3,8 @@ package com.aniview.aniview.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -12,12 +14,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "user_anime_lists")
 public class UserAnimeList {
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(name = "anime_id", nullable = false)
-    private Long animeId;
-
     @Column(name = "list_type", nullable = false, length = Integer.MAX_VALUE)
     private String listType;
 
@@ -36,21 +32,13 @@ public class UserAnimeList {
     @Id
     private Long id;
 
-    public Long getUserId() {
-        return userId;
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getAnimeId() {
-        return animeId;
-    }
-
-    public void setAnimeId(Long animeId) {
-        this.animeId = animeId;
-    }
+    @ManyToOne
+    @JoinColumn(name = "anime_id", nullable = false)
+    private Anime anime;
 
     public String getListType() {
         return listType;
@@ -98,5 +86,21 @@ public class UserAnimeList {
 
     public Long getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Anime getAnime() {
+        return anime;
+    }
+
+    public void setAnime(Anime anime) {
+        this.anime = anime;
     }
 }

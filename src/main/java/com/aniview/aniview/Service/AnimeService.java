@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aniview.aniview.Entity.Anime;
@@ -16,7 +15,6 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
 
-    @Autowired
     public AnimeService(AnimeRepository animeRepository) {
         this.animeRepository = animeRepository;
     }

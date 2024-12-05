@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Table(name = "anime")
@@ -61,6 +62,9 @@ public class Anime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "anime")
+    private List<UserAnimeList> userLists;
 
     public Anime() {
         this.totalViews = 0;
@@ -170,5 +174,13 @@ public class Anime {
 
     public Long getId() {
         return id;
+    }
+
+    public List<UserAnimeList> getUserLists() {
+        return userLists;
+    }
+
+    public void setUserLists(List<UserAnimeList> userLists) {
+        this.userLists = userLists;
     }
 }

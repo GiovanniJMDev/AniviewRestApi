@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -24,6 +26,9 @@ public class User {
     private String password;
     @Id
     private Long id;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserAnimeList> animeLists;
 
     public String getUsername() {
         return username;
@@ -71,5 +76,13 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public List<UserAnimeList> getAnimeLists() {
+        return animeLists;
+    }
+
+    public void setAnimeLists(List<UserAnimeList> animeLists) {
+        this.animeLists = animeLists;
     }
 }
