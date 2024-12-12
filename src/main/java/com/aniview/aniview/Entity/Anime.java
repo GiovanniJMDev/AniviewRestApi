@@ -1,6 +1,7 @@
 package com.aniview.aniview.Entity;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -11,11 +12,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+// import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "anime")
 public class Anime {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     @Column(name = "title", nullable = false, length = Integer.MAX_VALUE)
     private String title;
 
@@ -59,12 +69,18 @@ public class Anime {
 
     @Column(name = "weekly_views", nullable = false)
     private Integer weeklyViews;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @ManyToMany
+    @JoinTable(
+        name = "user_anime_lists",
+        joinColumns = @JoinColumn(name = "anime_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "anime")
-    private List<UserAnimeList> userLists;
+    private List<UserAnimeList> userAnimeLists;
 
     public Anime() {
         this.totalViews = 0;
@@ -168,19 +184,19 @@ public class Anime {
         this.weeklyViews = weeklyViews;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public List<UserAnimeList> getUserLists() {
-        return userLists;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public void setUserLists(List<UserAnimeList> userLists) {
-        this.userLists = userLists;
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

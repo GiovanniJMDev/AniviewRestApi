@@ -5,15 +5,17 @@ meta {
 }
 
 put {
-  url: http://localhost:8080/api/users
+  url: http://localhost:8080/api/users/e4c8b7bf-264b-49e1-abc3-a7baccb06e28
   body: json
   auth: none
 }
 
 body:json {
   {
-    "id": 1,
-    "name": "Jane Doe",
-    "email": "jane.doe@example.com"
+      "username": "usuario123456",
+      "name": "Juanito",
+      "lastname": "Pérez",
+      "email": "juan.perez3@example.com",
+      "password": "Contraseña123!"
   }
-} 
+}

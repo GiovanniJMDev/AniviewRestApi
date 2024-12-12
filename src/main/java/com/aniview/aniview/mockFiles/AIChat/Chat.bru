@@ -5,7 +5,12 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://localhost:8080/api/groq/chat
+  body: json
   auth: none
+}
+
+body:json {
+  {"prompt": "hola"}
+  
 }

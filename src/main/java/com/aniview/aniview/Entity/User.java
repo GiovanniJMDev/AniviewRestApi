@@ -3,9 +3,14 @@ package com.aniview.aniview.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import java.util.UUID;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -25,10 +30,15 @@ public class User {
     @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
     private String password;
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<UserAnimeList> animeLists;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Anime> animes;
 
     public String getUsername() {
         return username;
@@ -70,11 +80,11 @@ public class User {
         this.password = password;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -84,5 +94,13 @@ public class User {
 
     public void setAnimeLists(List<UserAnimeList> animeLists) {
         this.animeLists = animeLists;
+    }
+
+    public List<Anime> getAnimes() {
+        return animes;
+    }
+
+    public void setAnimes(List<Anime> animes) {
+        this.animes = animes;
     }
 }

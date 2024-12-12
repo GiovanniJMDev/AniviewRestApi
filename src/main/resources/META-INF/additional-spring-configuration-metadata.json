@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "spring.security.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.enabled'"
+  },
+  {
+    "name": "spring.groq.api-key",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.groq.api-key'"
+  },
+  {
+    "name": "spring.datasource.hikari.statement-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.hikari.statement-timeout'"
+  }
+]}

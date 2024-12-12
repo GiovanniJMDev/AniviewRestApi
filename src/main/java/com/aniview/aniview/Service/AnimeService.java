@@ -3,14 +3,16 @@ package com.aniview.aniview.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.aniview.aniview.DTO.AnimeDTO;
 import com.aniview.aniview.Entity.Anime;
 import com.aniview.aniview.Repository.AnimeRepository;
 
-@Service // Esta anotación convierte esta clase en un bean gestionado por Spring.
+@Service
 public class AnimeService {
 
     private final AnimeRepository animeRepository;
@@ -19,23 +21,27 @@ public class AnimeService {
         this.animeRepository = animeRepository;
     }
 
-    public List<Anime> getAllAnimes() {
-        return animeRepository.findAll();
+    public List<AnimeDTO> getAllAnimes() {
+        return animeRepository.findAll().stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
     }
 
-    public Optional<Anime> getAnimeById(Long id) {
-        return animeRepository.findById(id);
+    public Optional<AnimeDTO> getAnimeById(UUID id) {
+        return animeRepository.findById(id)
+            .map(this::convertToDTO);
     }
 
-    public List<Anime> findByGenre(String genre) {
+    public List<AnimeDTO> findByGenre(String genre) {
         System.out.println("genre: " + genre);
         if (genre == null || genre.isEmpty()) {
             throw new IllegalArgumentException("Debe seleccionar un género.");
         }
 
         List<Anime> allAnimes = animeRepository.findAll();
-        List<Anime> filteredAnimes = allAnimes.stream()
+        List<AnimeDTO> filteredAnimes = allAnimes.stream()
                 .filter(anime -> anime.getGenres().contains(genre))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
 
         if (filteredAnimes.isEmpty()) {
@@ -45,31 +51,33 @@ public class AnimeService {
         return filteredAnimes;
     }
 
-    public Optional<Anime> findRandomAnimeByGenres(List<String> genres) {
+    public Optional<AnimeDTO> findRandomAnimeByGenres(List<String> genres) {
+        Random random = new Random();
+
         if (genres == null || genres.isEmpty()) {
-            return Optional.empty();
+            List<AnimeDTO> allAnimes = getAllAnimes();
+            if (allAnimes.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(allAnimes.get(random.nextInt(allAnimes.size())));
         }
 
-        // Paso 1: Seleccionar un género aleatorio de la lista proporcionada
-        Random random = new Random();
         String randomGenre = genres.get(random.nextInt(genres.size()));
-
-        // Paso 2: Buscar animes que contengan ese género
-        List<Anime> matchingAnimes = findByGenre(randomGenre);
+        List<AnimeDTO> matchingAnimes = findByGenre(randomGenre);
 
         if (matchingAnimes.isEmpty()) {
             return Optional.empty();
         }
 
-        // Paso 3: Elegir un anime aleatorio de los encontrados
         return Optional.of(matchingAnimes.get(random.nextInt(matchingAnimes.size())));
     }
 
-    public Anime addAnime(Anime anime) {
-        return animeRepository.save(anime);
+    public AnimeDTO addAnime(Anime anime) {
+        Anime savedAnime = animeRepository.save(anime);
+        return convertToDTO(savedAnime);
     }
 
-    public Optional<Anime> updateAnime(Long id, Anime anime) {
+    public Optional<AnimeDTO> updateAnime(UUID id, Anime anime) {
         return animeRepository.findById(id).map(existingAnime -> {
             existingAnime.setTitle(anime.getTitle());
             existingAnime.setGenres(anime.getGenres());
@@ -79,14 +87,39 @@ public class AnimeService {
             existingAnime.setSeasons(anime.getSeasons());
             existingAnime.setYearStarted(anime.getYearStarted());
             existingAnime.setYearEnded(anime.getYearEnded());
-            return animeRepository.save(existingAnime);
+            existingAnime.setPlatforms(anime.getPlatforms());
+            existingAnime.setEpisodesPerSeason(anime.getEpisodesPerSeason());
+            existingAnime.setTotalViews(anime.getTotalViews());
+            existingAnime.setWeeklyViews(anime.getWeeklyViews());
+            return convertToDTO(animeRepository.save(existingAnime));
         });
     }
 
-    public boolean deleteAnime(Long id) {
+    public boolean deleteAnime(UUID id) {
         return animeRepository.findById(id).map(anime -> {
             animeRepository.delete(anime);
             return true;
         }).orElse(false);
     }
-}/* End of Selection */
+
+    private AnimeDTO convertToDTO(Anime anime) {
+        AnimeDTO dto = new AnimeDTO(
+            anime.getId(),
+            anime.getTitle(),
+            anime.getImage(),
+            anime.getGenres(),
+            anime.getRating()
+        );
+        dto.setDescription(anime.getDescription());
+        dto.setPlatforms(anime.getPlatforms());
+        dto.setYearStarted(anime.getYearStarted());
+        dto.setYearEnded(anime.getYearEnded());
+        dto.setSeasons(anime.getSeasons());
+        dto.setEpisodesPerSeason(anime.getEpisodesPerSeason().stream()
+            .map(obj -> (Integer) obj)
+            .collect(Collectors.toList()));
+        dto.setTotalViews(anime.getTotalViews());
+        dto.setWeeklyViews(anime.getWeeklyViews());
+        return dto;
+    }
+}
