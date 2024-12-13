@@ -80,7 +80,7 @@ public class UserAnimeListService {
     }
 
     public UserAnimeListDTO mapToDTO(UserAnimeList entity) {
-        return new UserAnimeListDTO(entity); // Solo esto es necesario
+        return new UserAnimeListDTO(entity);
     }
 
     public UserAnimeListDTO addAnimeToList(UUID userId, UUID animeId, ListType listType) {
@@ -90,7 +90,6 @@ public class UserAnimeListService {
         Anime anime = animeRepository.findById(animeId)
             .orElseThrow(() -> new ResourceNotFoundException("Anime not found"));
             
-        // Check if anime is already in the list
         Optional<UserAnimeList> existingEntry = userAnimeListRepository
             .findByUserAndAnimeAndListType(user, anime, listType);
             
