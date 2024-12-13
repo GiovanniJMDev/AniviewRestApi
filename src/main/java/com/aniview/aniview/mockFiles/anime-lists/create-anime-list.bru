@@ -1,0 +1,18 @@
+meta {
+  name: create-anime-list
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/anime-lists
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "listType": "WATCHING",
+    "userId": "258a3564-e4f0-4eb2-8554-0f939ce32fd1"
+  }
+} 

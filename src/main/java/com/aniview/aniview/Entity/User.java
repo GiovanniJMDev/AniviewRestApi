@@ -35,10 +35,8 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<UserAnimeList> animeLists;
+    private List<AnimeList> animeLists;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Anime> animes;
 
     public String getUsername() {
         return username;
@@ -88,19 +86,12 @@ public class User {
         return id;
     }
 
-    public List<UserAnimeList> getAnimeLists() {
+    public List<AnimeList> getAnimeLists() {
         return animeLists;
     }
 
-    public void setAnimeLists(List<UserAnimeList> animeLists) {
+    public void setAnimeLists(List<AnimeList> animeLists) {
         this.animeLists = animeLists;
     }
 
-    public List<Anime> getAnimes() {
-        return animes;
-    }
-
-    public void setAnimes(List<Anime> animes) {
-        this.animes = animes;
-    }
 }

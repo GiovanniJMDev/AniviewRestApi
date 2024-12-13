@@ -1,0 +1,18 @@
+meta {
+  name: create-anime-list-item
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/api/anime-list-items
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "listId": "550e8400-e29b-41d4-a716-446655440000",
+    "animeId": "550e8400-e29b-41d4-a716-446655440001"
+  }
+} 

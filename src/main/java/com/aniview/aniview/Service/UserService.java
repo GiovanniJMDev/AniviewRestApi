@@ -139,4 +139,9 @@ public class UserService {
             throw new UserException("Error al convertir usuario a DTO: " + e.getMessage());
         }
     }
+
+    public User findById(UUID userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + userId));
+    }
 } 

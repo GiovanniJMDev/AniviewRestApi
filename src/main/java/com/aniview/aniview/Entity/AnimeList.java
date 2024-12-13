@@ -1,6 +1,10 @@
 package com.aniview.aniview.Entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -11,35 +15,35 @@ public class AnimeList {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "list_type", nullable = false)
+    private String listType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ListType listType;
-
-    @Column(name = "name")
-    private String name;
-
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = Instant.now();
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // Constructor
+    public AnimeList() {
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
+    public AnimeList(UUID id, String listType, Instant createdAt, Instant updatedAt, User user) {
+        this.id = id;
+        this.listType = listType;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.user = user;
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -48,28 +52,12 @@ public class AnimeList {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public ListType getListType() {
+    public String getListType() {
         return listType;
     }
 
-    public void setListType(ListType listType) {
+    public void setListType(String listType) {
         this.listType = listType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Instant getCreatedAt() {
@@ -87,4 +75,12 @@ public class AnimeList {
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
-} 
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+}
