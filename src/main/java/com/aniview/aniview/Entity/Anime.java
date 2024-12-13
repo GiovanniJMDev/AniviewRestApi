@@ -12,10 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-// import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,11 +28,9 @@ public class Anime {
     @Column(name = "image", nullable = false, length = Integer.MAX_VALUE)
     private String image;
 
-    // Cambiado de Map<String, Object> a List<String> para manejar arrays JSON
     @Column(name = "genres", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     private List<String> genres;
-
 
     @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
     private String description;
@@ -44,11 +38,9 @@ public class Anime {
     @Column(name = "rating", nullable = false)
     private Double rating;
 
-    // Cambiado de Map<String, Object> a List<String> para manejar arrays JSON
     @Column(name = "platforms", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     private List<String> platforms;
-
 
     @Column(name = "year_started", nullable = false)
     private Integer yearStarted;
@@ -59,7 +51,6 @@ public class Anime {
     @Column(name = "seasons", nullable = false)
     private Integer seasons;
 
-    // Cambiado de Map<String, Object> a List<Object> para manejar arrays JSON
     @Column(name = "episodes_per_season", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Object> episodesPerSeason;
@@ -70,17 +61,9 @@ public class Anime {
     @Column(name = "weekly_views", nullable = false)
     private Integer weeklyViews;
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_anime_lists",
-        joinColumns = @JoinColumn(name = "anime_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
-
     @JsonIgnore
     @OneToMany(mappedBy = "anime")
-    private List<UserAnimeList> userAnimeLists;
+    private List<AnimeListItem> listItems;
 
     public Anime() {
         this.totalViews = 0;
@@ -110,7 +93,6 @@ public class Anime {
     public void setGenres(List<String> genres) {
         this.genres = genres;
     }
-
 
     public String getDescription() {
         return description;
@@ -192,11 +174,11 @@ public class Anime {
         this.id = id;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<AnimeListItem> getListItems() {
+        return listItems;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setListItems(List<AnimeListItem> listItems) {
+        this.listItems = listItems;
     }
 }

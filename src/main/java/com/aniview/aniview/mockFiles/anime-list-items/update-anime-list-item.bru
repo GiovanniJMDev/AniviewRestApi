@@ -1,0 +1,18 @@
+meta {
+  name: update-anime-list-item
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/anime-list-items/258a3564-e4f0-4eb2-8554-0f939ce32fd1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "animeListId": "258a3564-e4f0-4eb2-8554-0f939ce32fd1",
+    "animeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+} 
