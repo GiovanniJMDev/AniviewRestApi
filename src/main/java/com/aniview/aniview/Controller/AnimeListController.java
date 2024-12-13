@@ -24,7 +24,7 @@ public class AnimeListController {
     @PostMapping
     public ResponseEntity<?> createAnimeList(@RequestBody AnimeListDTO animeListDTO) {
         try {
-            AnimeList createdList = animeListService.createAnimeList(animeListDTO);
+            AnimeListDTO createdList = animeListService.createAnimeList(animeListDTO);
             return ResponseEntity.ok(createdList);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -37,28 +37,34 @@ public class AnimeListController {
 
     // Read
     @GetMapping
-    public ResponseEntity<List<AnimeList>> getAllAnimeLists() {
+    public ResponseEntity<List<AnimeListDTO>> getAllAnimeLists() {
         return ResponseEntity.ok(animeListService.getAllAnimeLists());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimeList> getAnimeListById(@PathVariable UUID id) {
+    public ResponseEntity<AnimeListDTO> getAnimeListById(@PathVariable UUID id) {
         return animeListService.getAnimeListById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<AnimeList>> getAnimeListsByUserId(@PathVariable UUID userId) {
+    public ResponseEntity<List<AnimeListDTO>> getAnimeListsByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(animeListService.getAnimeListsByUserId(userId));
     }
 
     // Update
     @PutMapping("/{id}")
-    public ResponseEntity<AnimeList> updateAnimeList(
+    public ResponseEntity<?> updateAnimeList(
             @PathVariable UUID id,
-            @RequestBody AnimeList animeListDetails) {
-        return ResponseEntity.ok(animeListService.updateAnimeList(id, animeListDetails));
+            @RequestBody AnimeListDTO animeListDTO) {
+        try {
+            AnimeListDTO updated = animeListService.updateAnimeList(id, animeListDTO);
+            return ResponseEntity.ok(updated);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+        }
     }
 
     // Delete

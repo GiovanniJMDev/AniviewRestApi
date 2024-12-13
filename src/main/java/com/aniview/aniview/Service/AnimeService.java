@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aniview.aniview.DTO.AnimeDTO;
@@ -15,11 +16,8 @@ import com.aniview.aniview.Repository.AnimeRepository;
 @Service
 public class AnimeService {
 
-    private final AnimeRepository animeRepository;
-
-    public AnimeService(AnimeRepository animeRepository) {
-        this.animeRepository = animeRepository;
-    }
+    @Autowired
+    private AnimeRepository animeRepository;
 
     public List<AnimeDTO> getAllAnimes() {
         return animeRepository.findAll().stream()
@@ -121,5 +119,9 @@ public class AnimeService {
         dto.setTotalViews(anime.getTotalViews());
         dto.setWeeklyViews(anime.getWeeklyViews());
         return dto;
+    }
+
+    public Optional<Anime> findById(UUID id) {
+        return animeRepository.findById(id);
     }
 }

@@ -3,14 +3,14 @@ package com.aniview.aniview.DTO;
 import java.time.Instant;
 import java.util.UUID;
 
-public class AnimeListDTO {
+public class AnimeListItemDTO {
     private UUID id;
-    private UUID userId;
-    private String listType;
+    private UUID animeListId;
+    private UUID animeId;
     private Instant createdAt;
     private Instant updatedAt;
 
-    // Add all getters and setters
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -19,20 +19,20 @@ public class AnimeListDTO {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getAnimeListId() {
+        return animeListId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setAnimeListId(UUID animeListId) {
+        this.animeListId = animeListId;
     }
 
-    public String getListType() {
-        return listType;
+    public UUID getAnimeId() {
+        return animeId;
     }
 
-    public void setListType(String listType) {
-        this.listType = listType;
+    public void setAnimeId(UUID animeId) {
+        this.animeId = animeId;
     }
 
     public Instant getCreatedAt() {
