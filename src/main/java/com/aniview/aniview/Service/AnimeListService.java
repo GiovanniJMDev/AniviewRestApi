@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,20 +26,30 @@ public class AnimeListService {
 
     @Transactional
     public AnimeListDTO createAnimeList(AnimeListDTO dto) {
-        try {
-            User user = userService.findById(dto.getUserId());
-            
-            AnimeList animeList = new AnimeList();
-            animeList.setListType(dto.getListType());
-            animeList.setUser(user);
-            animeList.setCreatedAt(Instant.now());
-            animeList.setUpdatedAt(Instant.now());
-            
-            AnimeList saved = animeListRepository.save(animeList);
-            return convertToDTO(saved);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create anime list", e);
+        List<String> errors = new ArrayList<>();
+        if (dto.getUserId() == null) {
+            errors.add("El ID de usuario no debe ser nulo");
         }
+        if (dto.getListType() == null || dto.getListType().isEmpty()) {
+            errors.add("El tipo de lista no debe ser nulo o vacío");
+        }
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join(", ", errors));
+        }
+
+        User user = userService.findById(dto.getUserId());
+        if (user == null) {
+            throw new ResourceNotFoundException("Usuario no encontrado con id: " + dto.getUserId());
+        }
+
+        AnimeList animeList = new AnimeList();
+        animeList.setListType(dto.getListType());
+        animeList.setUser(user);
+        animeList.setCreatedAt(Instant.now());
+        animeList.setUpdatedAt(Instant.now());
+
+        AnimeList saved = animeListRepository.save(animeList);
+        return convertToDTO(saved);
     }
 
     @Transactional(readOnly = true)
@@ -73,8 +84,16 @@ public class AnimeListService {
 
     @Transactional
     public AnimeListDTO updateAnimeList(UUID id, AnimeListDTO animeListDTO) {
+        List<String> errors = new ArrayList<>();
+        if (animeListDTO.getListType() == null || animeListDTO.getListType().isEmpty()) {
+            errors.add("El tipo de lista no debe ser nulo o vacío");
+        }
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join(", ", errors));
+        }
+
         AnimeList animeList = animeListRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("AnimeList not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("AnimeList no encontrado con id: " + id));
         
         animeList.setListType(animeListDTO.getListType());
         animeList.setUpdatedAt(Instant.now());

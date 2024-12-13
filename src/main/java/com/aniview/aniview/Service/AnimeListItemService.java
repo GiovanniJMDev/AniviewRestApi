@@ -29,9 +29,9 @@ public class AnimeListItemService {
     @Transactional
     public AnimeListItemDTO createAnimeListItem(AnimeListItemDTO dto) {
         AnimeList animeList = animeListService.findAnimeListById(dto.getAnimeListId())
-                .orElseThrow(() -> new ResourceNotFoundException("AnimeList not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("AnimeList no encontrado"));
         Anime anime = animeService.findById(dto.getAnimeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Anime not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Anime no encontrado"));
 
         // Check if the anime is already in the list
         boolean exists = animeListItemRepository.findByAnimeListId(animeList.getId()).stream()
@@ -50,21 +50,29 @@ public class AnimeListItemService {
 
     @Transactional(readOnly = true)
     public List<AnimeListItemDTO> getAnimeListItemsByListId(UUID listId) {
-        return animeListItemRepository.findByAnimeListId(listId).stream()
+        List<AnimeListItemDTO> items = animeListItemRepository.findByAnimeListId(listId).stream()
                 .map(this::convertToDTO)
                 .toList();
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("No hay datos disponibles para esta lista.");
+        }
+        return items;
     }
 
     @Transactional(readOnly = true)
     public Optional<AnimeListItemDTO> getAnimeListItemById(UUID id) {
-        return animeListItemRepository.findById(id)
+        Optional<AnimeListItemDTO> item = animeListItemRepository.findById(id)
                 .map(this::convertToDTO);
+        if (item.isEmpty()) {
+            throw new ResourceNotFoundException("AnimeListItem no encontrado con id: " + id);
+        }
+        return item;
     }
 
     @Transactional
     public AnimeListItemDTO updateAnimeListItem(UUID id, AnimeListItemDTO dto) {
         AnimeListItem item = animeListItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("AnimeListItem not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("AnimeListItem no encontrado"));
 
         // item.setUpdatedAt(Instant.now());
 
@@ -74,14 +82,21 @@ public class AnimeListItemService {
 
     @Transactional
     public void deleteAnimeListItem(UUID id) {
+        if (!animeListItemRepository.existsById(id)) {
+            throw new ResourceNotFoundException("AnimeListItem no encontrado");
+        }
         animeListItemRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public List<AnimeListItemDTO> getAllAnimeListItems() {
-        return animeListItemRepository.findAll().stream()
+        List<AnimeListItemDTO> items = animeListItemRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .toList();
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("No hay datos disponibles.");
+        }
+        return items;
     }
 
     private AnimeListItemDTO convertToDTO(AnimeListItem item) {

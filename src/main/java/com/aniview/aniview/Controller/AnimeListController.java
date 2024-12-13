@@ -1,7 +1,6 @@
 package com.aniview.aniview.Controller;
 
 import com.aniview.aniview.DTO.AnimeListDTO;
-import com.aniview.aniview.Entity.AnimeList;
 import com.aniview.aniview.Exception.ResourceNotFoundException;
 import com.aniview.aniview.Service.AnimeListService;
 import org.springframework.beans.factory.annotation.Autowired;
