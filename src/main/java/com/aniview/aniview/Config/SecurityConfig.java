@@ -14,11 +14,11 @@ import com.aniview.aniview.Security.JWTAuthorizationFilter;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers("/public/**").permitAll() // Endpoints públicos
+                        // .requestMatchers("/**").permitAll() // Endpoints públicos
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
