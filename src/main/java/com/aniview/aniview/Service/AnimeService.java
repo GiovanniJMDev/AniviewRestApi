@@ -93,6 +93,20 @@ public class AnimeService {
         });
     }
 
+    public Optional<AnimeDTO> findRandomAnime() {
+        Random random = new Random();
+        
+        List<AnimeDTO> allAnimes = getAllAnimes(); // Obtiene todos los animes
+        if (allAnimes.isEmpty()) {
+            return Optional.empty(); // Si no hay animes, retorna Optional vacío
+        }
+        
+        // Selecciona un anime aleatorio
+        AnimeDTO randomAnime = allAnimes.get(random.nextInt(allAnimes.size()));
+        return Optional.of(randomAnime); // Retorna el anime aleatorio envuelto en Optional
+    }
+    
+
     public boolean deleteAnime(UUID id) {
         return animeRepository.findById(id).map(anime -> {
             animeRepository.delete(anime);

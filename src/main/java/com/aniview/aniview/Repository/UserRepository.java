@@ -1,14 +1,21 @@
 package com.aniview.aniview.Repository;
 
-import com.aniview.aniview.Entity.User;
-
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.aniview.aniview.DTO.UserDTO;
+import com.aniview.aniview.Entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    User findByUsername(String username);
-    User findByEmail(String email);
-} 
+
+    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email) FROM User u WHERE u.username = :username")
+    UserDTO findByUsername(@Param("username") String username);
+
+    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email) FROM User u WHERE u.email = :email")
+    UserDTO findByEmail(String email); // Busca por el email
+}

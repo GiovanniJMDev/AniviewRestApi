@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aniview.aniview.DTO.AnimeDTO;
 import com.aniview.aniview.Entity.Anime;
 import com.aniview.aniview.Service.AnimeService;
-import com.aniview.aniview.DTO.AnimeDTO;
 
 @RestController
 @RequestMapping("/api/anime")
@@ -56,11 +56,20 @@ public class AnimeController {
     }    
 
     @GetMapping("/random")
-    public ResponseEntity<AnimeDTO> getRandomAnimeByGenres(@RequestParam List<String> genres) {
+    public ResponseEntity<AnimeDTO> getRandomAnimeByGenres(@RequestParam(required = false) List<String> genres) {
+        // Si la lista de géneros está vacía o no se pasa, busca un anime aleatorio sin filtro de género
+        if (genres == null || genres.isEmpty()) {
+            return animeService.findRandomAnime()
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+    
+        // Si se pasan géneros, busca un anime aleatorio que coincida con los géneros
         return animeService.findRandomAnimeByGenres(genres)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
 
     @PostMapping
     public ResponseEntity<AnimeDTO> addAnime(@RequestBody Anime anime) {

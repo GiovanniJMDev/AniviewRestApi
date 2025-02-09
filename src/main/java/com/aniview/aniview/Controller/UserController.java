@@ -1,35 +1,48 @@
 package com.aniview.aniview.Controller;
 
-import com.aniview.aniview.Entity.User;
-import com.aniview.aniview.Service.UserService;
-import com.aniview.aniview.DTO.UserDTO;
-import com.aniview.aniview.DTO.PasswordChangeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.aniview.aniview.DTO.PasswordChangeDTO;
+import com.aniview.aniview.DTO.UserDTO;
+import com.aniview.aniview.Entity.User;
+import com.aniview.aniview.Service.TokenService;
+import com.aniview.aniview.Service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final TokenService tokenService; // Inyectamos el servicio TokenService
+
+    // Inyección por Constructor
+    public UserController(UserService userService, TokenService tokenService) {
+        this.userService = userService;
+        this.tokenService = tokenService; // Inyectamos el TokenService
+    }
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             UserDTO createdUser = userService.createUser(user);
             return ResponseEntity.ok()
-                .body(Map.of(
-                    "message", "Usuario creado exitosamente",
-                    "user", createdUser
-                ));
+                    .body(Map.of(
+                            "message", "Usuario creado exitosamente",
+                            "user", createdUser));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al crear usuario: " + e.getMessage());
+                    .body("Error al crear usuario: " + e.getMessage());
         }
     }
 
@@ -39,7 +52,7 @@ public class UserController {
             return ResponseEntity.ok(userService.getUserById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al obtener usuario: " + e.getMessage());
+                    .body("Error al obtener usuario: " + e.getMessage());
         }
     }
 
@@ -49,7 +62,7 @@ public class UserController {
             return ResponseEntity.ok(userService.getAllUsers());
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al obtener lista de usuarios: " + e.getMessage());
+                    .body("Error al obtener lista de usuarios: " + e.getMessage());
         }
     }
 
@@ -62,13 +75,12 @@ public class UserController {
             updatedUser.setPassword(null);
             UserDTO updated = userService.updateUser(id, updatedUser);
             return ResponseEntity.ok()
-                .body(Map.of(
-                    "message", "Usuario actualizado exitosamente",
-                    "user", updated
-                ));
+                    .body(Map.of(
+                            "message", "Usuario actualizado exitosamente",
+                            "user", updated));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al actualizar usuario: " + e.getMessage());
+                    .body("Error al actualizar usuario: " + e.getMessage());
         }
     }
 
@@ -77,17 +89,16 @@ public class UserController {
         try {
             if (!passwordDTO.isValid()) {
                 return ResponseEntity.badRequest()
-                    .body("Error: Solicitud de cambio de contraseña inválida. Por favor revise los datos ingresados.");
+                        .body("Error: Solicitud de cambio de contraseña inválida. Por favor revise los datos ingresados.");
             }
             UserDTO updated = userService.updatePassword(id, passwordDTO);
             return ResponseEntity.ok()
-                .body(Map.of(
-                    "message", "Contraseña actualizada exitosamente",
-                    "user", updated
-                ));
+                    .body(Map.of(
+                            "message", "Contraseña actualizada exitosamente",
+                            "user", updated));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al actualizar contraseña: " + e.getMessage());
+                    .body("Error al actualizar contraseña: " + e.getMessage());
         }
     }
 
@@ -96,10 +107,29 @@ public class UserController {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok()
-                .body("Usuario eliminado exitosamente");
+                    .body("Usuario eliminado exitosamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body("Error al eliminar usuario: " + e.getMessage());
+                    .body("Error al eliminar usuario: " + e.getMessage());
         }
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUserInfo() {
+        try {
+            // Obtener el correo electrónico del token JWT
+            String email = tokenService.getCurrentEmailFromToken();
+
+            // Obtener el usuario por su correo electrónico
+            UserDTO userDTO = userService.getUserByEmail(email);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Información del usuario obtenida exitosamente",
+                    "user", userDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body("Error al obtener la información del usuario: " + e.getMessage());
+        }
+    }
+
 }

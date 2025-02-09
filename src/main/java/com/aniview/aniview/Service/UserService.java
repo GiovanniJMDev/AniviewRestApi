@@ -1,20 +1,22 @@
 package com.aniview.aniview.Service;
 
-import com.aniview.aniview.Entity.User;
-import com.aniview.aniview.Repository.UserRepository;
-import com.aniview.aniview.Exception.UserException;
-import com.aniview.aniview.Exception.ResourceNotFoundException;
-import com.aniview.aniview.DTO.UserDTO;
-import com.aniview.aniview.DTO.PasswordChangeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aniview.aniview.DTO.PasswordChangeDTO;
+import com.aniview.aniview.DTO.UserDTO;
+import com.aniview.aniview.Entity.User;
+import com.aniview.aniview.Exception.ResourceNotFoundException;
+import com.aniview.aniview.Exception.UserException;
+import com.aniview.aniview.Repository.UserRepository;
+
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -57,11 +59,23 @@ public class UserService {
 
     public UserDTO getUserByUsername(String username) {
         try {
-            User user = userRepository.findByUsername(username);
+            UserDTO user = userRepository.findByUsername(username);
             if (user == null) {
                 throw new ResourceNotFoundException("Usuario no encontrado con username: " + username);
             }
-            return convertToDTO(user);
+            return user;
+        } catch (Exception e) {
+            throw new UserException("Error al obtener el usuario: " + e.getMessage());
+        }
+    }
+
+    public UserDTO getUserByEmail(String email) {
+        try {
+            UserDTO user = userRepository.findByEmail(email);
+            if (user == null) {
+                throw new ResourceNotFoundException("Usuario no encontrado con email: " + email);
+            }
+            return user;
         } catch (Exception e) {
             throw new UserException("Error al obtener el usuario: " + e.getMessage());
         }
@@ -80,8 +94,8 @@ public class UserService {
     public UserDTO updateUser(UUID id, User partialUser) {
         try {
             User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
-            
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+
             // Update all fields except id, email and password
             if (partialUser.getUsername() != null) {
                 existingUser.setUsername(partialUser.getUsername());
@@ -94,7 +108,7 @@ public class UserService {
             }
             // Preserve existing id, email and password
             existingUser.setId(id);
-            
+
             return convertToDTO(userRepository.save(existingUser));
         } catch (Exception e) {
             throw new UserException("Error al actualizar el usuario: " + e.getMessage());
@@ -104,10 +118,10 @@ public class UserService {
     public UserDTO updatePassword(UUID id, PasswordChangeDTO passwordDTO) {
         try {
             User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
-            
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+
             existingUser.setPassword(passwordDTO.getNewPassword());
-            
+
             return convertToDTO(userRepository.save(existingUser));
         } catch (Exception e) {
             throw new UserException("Error al actualizar la contraseña: " + e.getMessage());
@@ -129,12 +143,11 @@ public class UserService {
     private UserDTO convertToDTO(User user) {
         try {
             return new UserDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getName(),
-                user.getLastname(),
-                user.getEmail()
-            );
+                    user.getId(),
+                    user.getUsername(),
+                    user.getName(),
+                    user.getLastname(),
+                    user.getEmail());
         } catch (Exception e) {
             throw new UserException("Error al convertir usuario a DTO: " + e.getMessage());
         }
@@ -142,6 +155,6 @@ public class UserService {
 
     public User findById(UUID userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + userId));
     }
-} 
+}

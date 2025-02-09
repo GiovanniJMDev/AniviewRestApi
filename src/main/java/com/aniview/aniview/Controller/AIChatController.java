@@ -3,7 +3,6 @@ package com.aniview.aniview.Controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +16,13 @@ import com.aniview.aniview.Service.AIChatService;
 @RequestMapping("/api/groq")
 public class AIChatController {
     
-    @Autowired  
-    private AIChatService groqService;
-    
+    private final AIChatService groqService;
+
+    // Constructor que recibe el servicio como parámetro
+    public AIChatController(AIChatService groqService) {
+        this.groqService = groqService;
+    }
+
     @PostMapping("/chat")
     public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> request) {
         try {

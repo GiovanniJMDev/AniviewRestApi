@@ -1,15 +1,17 @@
 package com.aniview.aniview.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -26,8 +28,10 @@ public class User {
     @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
 
+    @JsonIgnore  // Esto asegura que la contraseña no se incluya en la serialización JSON.
     @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
     private String password;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
