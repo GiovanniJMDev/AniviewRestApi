@@ -121,7 +121,7 @@ public class AnimeListService {
         return animeListRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AnimeListWithItemsDTO> getAnimeListsWithItemsByUserId(UUID userId) {
         List<AnimeList> animeLists = animeListRepository.findByUserId(userId);
 
