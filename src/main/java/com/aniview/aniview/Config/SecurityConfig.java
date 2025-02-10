@@ -18,7 +18,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers("/**").permitAll() // Endpoints públicos
+                        .requestMatchers("/api/groq/chat").permitAll() // Endpoints públicos
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 

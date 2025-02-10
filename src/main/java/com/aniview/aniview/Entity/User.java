@@ -28,10 +28,9 @@ public class User {
     @Column(name = "email", nullable = false, length = Integer.MAX_VALUE)
     private String email;
 
-    @JsonIgnore  // Esto asegura que la contraseña no se incluya en la serialización JSON.
-    @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
-    private String password;
-    
+    @Column(name = "image", nullable = false, length = Integer.MAX_VALUE)
+    private String image;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -39,7 +38,6 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<AnimeList> animeLists;
-
 
     public String getUsername() {
         return username;
@@ -73,20 +71,20 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public List<AnimeList> getAnimeLists() {

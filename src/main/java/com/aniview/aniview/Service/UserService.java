@@ -20,32 +20,32 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserDTO createUser(User user) {
-        // Validar campos requeridos
-        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            throw new UserException("El nombre de usuario es requerido");
-        }
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            throw new UserException("El email es requerido");
-        }
-        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-            throw new UserException("La contraseña es requerida");
-        }
+    // public UserDTO createUser(User user) {
+    // // Validar campos requeridos
+    // if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+    // throw new UserException("El nombre de usuario es requerido");
+    // }
+    // if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+    // throw new UserException("El email es requerido");
+    // }
+    // // if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+    // // throw new UserException("La contraseña es requerida");
+    // // }
 
-        // Verificar si el usuario ya existe
-        if (userRepository.findByUsername(user.getUsername()) != null) {
-            throw new UserException("El nombre de usuario ya está en uso");
-        }
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new UserException("El email ya está registrado");
-        }
+    // // Verificar si el usuario ya existe
+    // if (userRepository.findByUsername(user.getUsername()) != null) {
+    // throw new UserException("El nombre de usuario ya está en uso");
+    // }
+    // if (userRepository.findByEmail(user.getEmail()) != null) {
+    // throw new UserException("El email ya está registrado");
+    // }
 
-        try {
-            return convertToDTO(userRepository.save(user));
-        } catch (Exception e) {
-            throw new UserException("Error al crear el usuario: " + e.getMessage());
-        }
-    }
+    // try {
+    // return convertToDTO(userRepository.save(user));
+    // } catch (Exception e) {
+    // throw new UserException("Error al crear el usuario: " + e.getMessage());
+    // }
+    // }
 
     public UserDTO getUserById(UUID id) {
         try {
@@ -115,18 +115,20 @@ public class UserService {
         }
     }
 
-    public UserDTO updatePassword(UUID id, PasswordChangeDTO passwordDTO) {
-        try {
-            User existingUser = userRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+    // public UserDTO updatePassword(UUID id, PasswordChangeDTO passwordDTO) {
+    // try {
+    // User existingUser = userRepository.findById(id)
+    // .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con
+    // id: " + id));
 
-            existingUser.setPassword(passwordDTO.getNewPassword());
+    // existingUser.setPassword(passwordDTO.getNewPassword());
 
-            return convertToDTO(userRepository.save(existingUser));
-        } catch (Exception e) {
-            throw new UserException("Error al actualizar la contraseña: " + e.getMessage());
-        }
-    }
+    // return convertToDTO(userRepository.save(existingUser));
+    // } catch (Exception e) {
+    // throw new UserException("Error al actualizar la contraseña: " +
+    // e.getMessage());
+    // }
+    // }
 
     public void deleteUser(UUID id) {
         try {
@@ -147,7 +149,8 @@ public class UserService {
                     user.getUsername(),
                     user.getName(),
                     user.getLastname(),
-                    user.getEmail());
+                    user.getEmail(),
+                    user.getImage());
         } catch (Exception e) {
             throw new UserException("Error al convertir usuario a DTO: " + e.getMessage());
         }

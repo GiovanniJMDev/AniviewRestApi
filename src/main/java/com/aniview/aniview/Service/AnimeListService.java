@@ -1,8 +1,12 @@
 package com.aniview.aniview.Service;
 
 import com.aniview.aniview.DTO.AnimeListDTO;
+import com.aniview.aniview.DTO.AnimeListItemDTO;
+import com.aniview.aniview.DTO.AnimeListItemDetailsDTO;
+import com.aniview.aniview.DTO.AnimeListWithItemsDTO;
 import com.aniview.aniview.Entity.AnimeList;
 import com.aniview.aniview.Entity.User;
+import com.aniview.aniview.Repository.AnimeListItemRepository;
 import com.aniview.aniview.Repository.AnimeListRepository;
 import com.aniview.aniview.Exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AnimeListService {
 
-    @Autowired
-    private AnimeListRepository animeListRepository;
+    private final AnimeListRepository animeListRepository;
+    private final AnimeListItemRepository animeListItemRepository;
+
+    public AnimeListService(AnimeListRepository animeListRepository, AnimeListItemRepository animeListItemRepository) {
+        this.animeListRepository = animeListRepository;
+        this.animeListItemRepository = animeListItemRepository;
+    }
 
     @Autowired
     private UserService userService;
@@ -94,10 +104,10 @@ public class AnimeListService {
 
         AnimeList animeList = animeListRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AnimeList no encontrado con id: " + id));
-        
+
         animeList.setListType(animeListDTO.getListType());
         animeList.setUpdatedAt(Instant.now());
-        
+
         AnimeList saved = animeListRepository.save(animeList);
         return convertToDTO(saved);
     }
@@ -109,5 +119,23 @@ public class AnimeListService {
     @Transactional(readOnly = true)
     public Optional<AnimeList> findAnimeListById(UUID id) {
         return animeListRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AnimeListWithItemsDTO> getAnimeListsWithItemsByUserId(UUID userId) {
+        List<AnimeList> animeLists = animeListRepository.findByUserId(userId);
+
+        return animeLists.stream().map(animeList -> {
+            List<AnimeListItemDetailsDTO> items = animeListItemRepository.findByAnimeListIdWithAnime(animeList.getId())
+                    .stream()
+                    .map(item -> new AnimeListItemDetailsDTO(
+                            item.getId(),
+                            item.getAnime().getId(),
+                            item.getAnime().getTitle(),
+                            item.getAnime().getImage()))
+                    .collect(Collectors.toList());
+
+            return new AnimeListWithItemsDTO(animeList.getId(), animeList.getListType(), items);
+        }).collect(Collectors.toList());
     }
 }

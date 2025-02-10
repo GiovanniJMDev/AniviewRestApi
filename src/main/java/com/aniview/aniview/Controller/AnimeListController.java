@@ -1,6 +1,7 @@
 package com.aniview.aniview.Controller;
 
 import com.aniview.aniview.DTO.AnimeListDTO;
+import com.aniview.aniview.DTO.AnimeListWithItemsDTO;
 import com.aniview.aniview.Exception.ResourceNotFoundException;
 import com.aniview.aniview.Service.AnimeListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ public class AnimeListController {
             return ResponseEntity.ok(createdList);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("message", e.getMessage()));
+                    .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Error creating anime list: " + e.getMessage()));
+                    .body(Map.of("message", "Error creating anime list: " + e.getMessage()));
         }
     }
 
@@ -48,8 +49,8 @@ public class AnimeListController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<AnimeListDTO>> getAnimeListsByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(animeListService.getAnimeListsByUserId(userId));
+    public ResponseEntity<List<AnimeListWithItemsDTO>> getAnimeListsWithItemsByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(animeListService.getAnimeListsWithItemsByUserId(userId));
     }
 
     // Update
@@ -62,7 +63,7 @@ public class AnimeListController {
             return ResponseEntity.ok(updated);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("message", e.getMessage()));
+                    .body(Map.of("message", e.getMessage()));
         }
     }
 
@@ -72,4 +73,4 @@ public class AnimeListController {
         animeListService.deleteAnimeList(id);
         return ResponseEntity.ok().build();
     }
-} 
+}

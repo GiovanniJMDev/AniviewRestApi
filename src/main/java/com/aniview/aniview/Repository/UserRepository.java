@@ -13,9 +13,9 @@ import com.aniview.aniview.Entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email) FROM User u WHERE u.username = :username")
+    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.username = :username")
     UserDTO findByUsername(@Param("username") String username);
 
-    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email) FROM User u WHERE u.email = :email")
-    UserDTO findByEmail(String email); // Busca por el email
+    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.email = :email")
+    UserDTO findByEmail(String email);
 }

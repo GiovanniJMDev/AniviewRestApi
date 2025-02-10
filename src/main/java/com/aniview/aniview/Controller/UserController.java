@@ -33,18 +33,18 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            UserDTO createdUser = userService.createUser(user);
-            return ResponseEntity.ok()
-                    .body(Map.of(
-                            "message", "Usuario creado exitosamente",
-                            "user", createdUser));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body("Error al crear usuario: " + e.getMessage());
-        }
-    }
+    // public ResponseEntity<?> createUser(@RequestBody User user) {
+    // try {
+    // UserDTO createdUser = userService.createUser(user);
+    // return ResponseEntity.ok()
+    // .body(Map.of(
+    // "message", "Usuario creado exitosamente",
+    // "user", createdUser));
+    // } catch (Exception e) {
+    // return ResponseEntity.badRequest()
+    // .body("Error al crear usuario: " + e.getMessage());
+    // }
+    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable UUID id) {
@@ -72,7 +72,6 @@ public class UserController {
             // Ensure we don't update id, email and password
             updatedUser.setId(id);
             updatedUser.setEmail(null);
-            updatedUser.setPassword(null);
             UserDTO updated = userService.updateUser(id, updatedUser);
             return ResponseEntity.ok()
                     .body(Map.of(
@@ -84,23 +83,25 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}/password")
-    public ResponseEntity<?> updatePassword(@PathVariable UUID id, @RequestBody PasswordChangeDTO passwordDTO) {
-        try {
-            if (!passwordDTO.isValid()) {
-                return ResponseEntity.badRequest()
-                        .body("Error: Solicitud de cambio de contraseña inválida. Por favor revise los datos ingresados.");
-            }
-            UserDTO updated = userService.updatePassword(id, passwordDTO);
-            return ResponseEntity.ok()
-                    .body(Map.of(
-                            "message", "Contraseña actualizada exitosamente",
-                            "user", updated));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body("Error al actualizar contraseña: " + e.getMessage());
-        }
-    }
+    // @PutMapping("/{id}/password")
+    // public ResponseEntity<?> updatePassword(@PathVariable UUID id, @RequestBody
+    // PasswordChangeDTO passwordDTO) {
+    // try {
+    // if (!passwordDTO.isValid()) {
+    // return ResponseEntity.badRequest()
+    // .body("Error: Solicitud de cambio de contraseña inválida. Por favor revise
+    // los datos ingresados.");
+    // }
+    // UserDTO updated = userService.updatePassword(id, passwordDTO);
+    // return ResponseEntity.ok()
+    // .body(Map.of(
+    // "message", "Contraseña actualizada exitosamente",
+    // "user", updated));
+    // } catch (Exception e) {
+    // return ResponseEntity.badRequest()
+    // .body("Error al actualizar contraseña: " + e.getMessage());
+    // }
+    // }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
@@ -123,9 +124,7 @@ public class UserController {
             // Obtener el usuario por su correo electrónico
             UserDTO userDTO = userService.getUserByEmail(email);
 
-            return ResponseEntity.ok(Map.of(
-                    "message", "Información del usuario obtenida exitosamente",
-                    "user", userDTO));
+            return ResponseEntity.ok(userDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body("Error al obtener la información del usuario: " + e.getMessage());

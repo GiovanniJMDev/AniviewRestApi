@@ -10,16 +10,18 @@ public class UserDTO {
     private String name;
     private String lastname;
     private String email;
+    private String image;
 
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String username, String name, String lastname, String email) {
+    public UserDTO(UUID id, String username, String name, String lastname, String email, String image) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.lastname = lastname;
         this.email = email;
+        this.image = image;
     }
 
     // Getters y setters
@@ -62,4 +64,12 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-} 
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+}
