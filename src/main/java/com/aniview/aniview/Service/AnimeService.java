@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aniview.aniview.DTO.AnimeDTO;
@@ -16,18 +15,21 @@ import com.aniview.aniview.Repository.AnimeRepository;
 @Service
 public class AnimeService {
 
-    @Autowired
-    private AnimeRepository animeRepository;
+    private final AnimeRepository animeRepository;
+
+    public AnimeService(AnimeRepository animeRepository) {
+        this.animeRepository = animeRepository;
+    }
 
     public List<AnimeDTO> getAllAnimes() {
         return animeRepository.findAll().stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public Optional<AnimeDTO> getAnimeById(UUID id) {
         return animeRepository.findById(id)
-            .map(this::convertToDTO);
+                .map(this::convertToDTO);
     }
 
     public List<AnimeDTO> findByGenre(String genre) {
@@ -95,17 +97,16 @@ public class AnimeService {
 
     public Optional<AnimeDTO> findRandomAnime() {
         Random random = new Random();
-        
+
         List<AnimeDTO> allAnimes = getAllAnimes(); // Obtiene todos los animes
         if (allAnimes.isEmpty()) {
             return Optional.empty(); // Si no hay animes, retorna Optional vacío
         }
-        
+
         // Selecciona un anime aleatorio
         AnimeDTO randomAnime = allAnimes.get(random.nextInt(allAnimes.size()));
         return Optional.of(randomAnime); // Retorna el anime aleatorio envuelto en Optional
     }
-    
 
     public boolean deleteAnime(UUID id) {
         return animeRepository.findById(id).map(anime -> {
@@ -116,20 +117,19 @@ public class AnimeService {
 
     private AnimeDTO convertToDTO(Anime anime) {
         AnimeDTO dto = new AnimeDTO(
-            anime.getId(),
-            anime.getTitle(),
-            anime.getImage(),
-            anime.getGenres(),
-            anime.getRating()
-        );
+                anime.getId(),
+                anime.getTitle(),
+                anime.getImage(),
+                anime.getGenres(),
+                anime.getRating());
         dto.setDescription(anime.getDescription());
         dto.setPlatforms(anime.getPlatforms());
         dto.setYearStarted(anime.getYearStarted());
         dto.setYearEnded(anime.getYearEnded());
         dto.setSeasons(anime.getSeasons());
         dto.setEpisodesPerSeason(anime.getEpisodesPerSeason().stream()
-            .map(obj -> (Integer) obj)
-            .collect(Collectors.toList()));
+                .map(obj -> (Integer) obj)
+                .collect(Collectors.toList()));
         dto.setTotalViews(anime.getTotalViews());
         dto.setWeeklyViews(anime.getWeeklyViews());
         return dto;

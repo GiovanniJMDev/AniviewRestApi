@@ -1,18 +1,20 @@
 package com.aniview.aniview.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.aniview.aniview.DTO.AnimeListDTO;
 import com.aniview.aniview.DTO.AnimeListItemDTO;
 import com.aniview.aniview.Entity.Anime;
 import com.aniview.aniview.Entity.AnimeList;
 import com.aniview.aniview.Entity.AnimeListItem;
 import com.aniview.aniview.Exception.ResourceNotFoundException;
 import com.aniview.aniview.Repository.AnimeListItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AnimeListItemService {
@@ -33,11 +35,16 @@ public class AnimeListItemService {
         Anime anime = animeService.findById(dto.getAnimeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Anime no encontrado"));
 
-        // Check if the anime is already in the list
-        boolean exists = animeListItemRepository.findByAnimeListId(animeList.getId()).stream()
+        // Obtener todas las listas del usuario
+        List<AnimeListDTO> userAnimeLists = animeListService.getAnimeListsByUserId(animeList.getUser().getId());
+
+        // Verificar si el anime ya está en alguna lista del usuario
+        boolean existsInUserLists = userAnimeLists.stream()
+                .flatMap(list -> animeListItemRepository.findByAnimeListId(list.getId()).stream())
                 .anyMatch(item -> item.getAnime().getId().equals(anime.getId()));
-        if (exists) {
-            throw new IllegalArgumentException("El anime ya está en la lista.");
+
+        if (existsInUserLists) {
+            throw new IllegalArgumentException("El anime ya está en una de tus listas.");
         }
 
         AnimeListItem item = new AnimeListItem();
@@ -108,4 +115,4 @@ public class AnimeListItemService {
         // dto.setUpdatedAt(item.getUpdatedAt());
         return dto;
     }
-} 
+}
