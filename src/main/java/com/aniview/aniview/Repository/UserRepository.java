@@ -1,4 +1,4 @@
-package com.aniview.aniview.Repository;
+package com.aniview.aniview.repository;
 
 import java.util.UUID;
 
@@ -7,15 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.aniview.aniview.DTO.UserDTO;
-import com.aniview.aniview.Entity.User;
+import com.aniview.aniview.dto.UserDTO;
+import com.aniview.aniview.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.username = :username")
+    @Query("SELECT new com.aniview.aniview.dto.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.username = :username")
     UserDTO findByUsername(@Param("username") String username);
 
-    @Query("SELECT new com.aniview.aniview.DTO.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.email = :email")
+    @Query("SELECT new com.aniview.aniview.dto.UserDTO(u.id, u.username, u.name, u.lastname, u.email, u.image) FROM User u WHERE u.email = :email")
     UserDTO findByEmail(String email);
 }

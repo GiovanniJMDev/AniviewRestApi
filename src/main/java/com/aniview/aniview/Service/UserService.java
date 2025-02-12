@@ -1,21 +1,24 @@
-package com.aniview.aniview.Service;
+package com.aniview.aniview.service;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aniview.aniview.DTO.PasswordChangeDTO;
-import com.aniview.aniview.DTO.UserDTO;
-import com.aniview.aniview.Entity.User;
-import com.aniview.aniview.Exception.ResourceNotFoundException;
-import com.aniview.aniview.Exception.UserException;
-import com.aniview.aniview.Repository.UserRepository;
+import com.aniview.aniview.dto.UserDTO;
+import com.aniview.aniview.entity.User;
+import com.aniview.aniview.exception.ResourceNotFoundException;
+import com.aniview.aniview.exception.UserException;
+import com.aniview.aniview.repository.UserRepository;
 
 @Service
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -136,7 +139,7 @@ public class UserService {
                 throw new ResourceNotFoundException("Usuario no encontrado con id: " + id);
             }
             userRepository.deleteById(id);
-            System.out.println("Usuario eliminado exitosamente: " + id);
+            log.info("Usuario eliminado exitosamente: " + id);
         } catch (Exception e) {
             throw new UserException("Error al eliminar el usuario: " + e.getMessage());
         }

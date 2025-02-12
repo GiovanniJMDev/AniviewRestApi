@@ -1,4 +1,4 @@
-package com.aniview.aniview.DTO;
+package com.aniview.aniview.dto;
 
 import java.time.Instant;
 import java.util.UUID;

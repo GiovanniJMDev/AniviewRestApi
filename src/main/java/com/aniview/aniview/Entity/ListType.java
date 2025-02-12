@@ -1,4 +1,4 @@
-package com.aniview.aniview.Entity;
+package com.aniview.aniview.entity;
 
 public enum ListType {
     PLAN_TO_WATCH("plan-to-watch"),

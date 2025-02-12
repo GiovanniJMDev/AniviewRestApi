@@ -1,4 +1,4 @@
-package com.aniview.aniview.Service;
+package com.aniview.aniview.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aniview.aniview.DTO.AnimeListDTO;
-import com.aniview.aniview.DTO.AnimeListItemDTO;
-import com.aniview.aniview.Entity.Anime;
-import com.aniview.aniview.Entity.AnimeList;
-import com.aniview.aniview.Entity.AnimeListItem;
-import com.aniview.aniview.Exception.ResourceNotFoundException;
-import com.aniview.aniview.Repository.AnimeListItemRepository;
+import com.aniview.aniview.dto.AnimeListDTO;
+import com.aniview.aniview.dto.AnimeListItemDTO;
+import com.aniview.aniview.entity.Anime;
+import com.aniview.aniview.entity.AnimeList;
+import com.aniview.aniview.entity.AnimeListItem;
+import com.aniview.aniview.exception.ResourceNotFoundException;
+import com.aniview.aniview.repository.AnimeListItemRepository;
 
 @Service
 public class AnimeListItemService {

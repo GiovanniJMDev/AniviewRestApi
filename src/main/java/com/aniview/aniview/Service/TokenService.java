@@ -1,4 +1,4 @@
-package com.aniview.aniview.Service;
+package com.aniview.aniview.service;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

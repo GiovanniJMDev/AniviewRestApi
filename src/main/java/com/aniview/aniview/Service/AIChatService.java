@@ -1,9 +1,11 @@
-package com.aniview.aniview.Service;
+package com.aniview.aniview.service;
 
 import java.io.IOException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import okhttp3.Response;
 @Service
 public class AIChatService {
     private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final Logger log = LoggerFactory.getLogger(AIChatService.class);
 
     @Value("${spring.groq.api-key}")
     private String apiKey;
@@ -55,7 +58,7 @@ public class AIChatService {
 
         try (Response response = client.newCall(request).execute()) {
             String responseBody = response.body().string();
-            System.out.println("Response Body: " + responseBody);
+            log.info("Response Body: " + responseBody);
             JSONObject jsonResponse = new JSONObject(responseBody);
             return jsonResponse.getJSONArray("choices")
                     .getJSONObject(0)

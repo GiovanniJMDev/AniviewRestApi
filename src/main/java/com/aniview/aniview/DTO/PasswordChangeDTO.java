@@ -1,4 +1,4 @@
-package com.aniview.aniview.DTO;
+package com.aniview.aniview.dto;
 
 public class PasswordChangeDTO {
     private String newPassword;

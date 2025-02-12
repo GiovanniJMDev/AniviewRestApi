@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/api/anime-lists/user/258a3564-e4f0-4eb2-8554-0f939ce32fd1
+  url: http://localhost:8080/api/anime-lists/user/:userID
   body: none
   auth: none
+}
+
+params:path {
+  userID: a9f4ecb1-ef6d-4dc6-8a56-1e182a243903
 }

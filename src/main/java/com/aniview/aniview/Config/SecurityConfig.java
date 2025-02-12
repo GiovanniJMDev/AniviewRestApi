@@ -1,4 +1,4 @@
-package com.aniview.aniview.Config;
+package com.aniview.aniview.config;
 
 import java.util.Arrays;
 
@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.aniview.aniview.Security.JWTAuthorizationFilter;
+import com.aniview.aniview.security.JWTAuthorizationFilter;
 
 import jakarta.servlet.Filter;
 
@@ -20,23 +21,22 @@ import jakarta.servlet.Filter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final ApiKeysConfig apiKeysConfig;
+
+    public SecurityConfig(ApiKeysConfig apiKeysConfig) {
+        this.apiKeysConfig = apiKeysConfig;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilita CORS con la configuración
-                                                                                   // proporcionada
-                .csrf(csrf -> csrf.disable()) // Desactiva CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/groq/chat").permitAll() // Endpoints públicos
-                        .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
-                )
-                .addFilterBefore(new JWTAuthorizationFilter(),
-                        (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT
-                                                                                               // antes del filtro de
-                                                                                               // autenticación por
-                                                                                               // nombre de usuario y
-                                                                                               // contraseña
-
+                        .requestMatchers("/api/groq/chat").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JWTAuthorizationFilter(apiKeysConfig),
+                        (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

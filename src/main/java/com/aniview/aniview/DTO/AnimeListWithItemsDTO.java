@@ -1,4 +1,4 @@
-package com.aniview.aniview.DTO;
+package com.aniview.aniview.dto;
 
 import java.util.List;
 import java.util.UUID;

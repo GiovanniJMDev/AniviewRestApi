@@ -1,4 +1,4 @@
-package com.aniview.aniview.Controller;
+package com.aniview.aniview.controller;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aniview.aniview.DTO.AnimeDTO;
-import com.aniview.aniview.Entity.Anime;
-import com.aniview.aniview.Service.AnimeService;
+import com.aniview.aniview.dto.AnimeDTO;
+import com.aniview.aniview.entity.Anime;
+import com.aniview.aniview.service.AnimeService;
 
 @RestController
 @RequestMapping("/api/anime")

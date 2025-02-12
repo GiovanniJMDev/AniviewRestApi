@@ -1,16 +1,21 @@
 package com.aniview.aniview;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-
 @SpringBootApplication
 public class AniviewApplication {
+
+	private static final Logger log = LoggerFactory.getLogger(AniviewApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(AniviewApplication.class, args);
@@ -21,12 +26,12 @@ public class AniviewApplication {
 		return args -> {
 			try (Connection connection = dataSource.getConnection()) {
 				if (connection.isValid(1)) {
-					System.out.println("Conexión a la base de datos exitosa!");
+					log.info("Conexión a la base de datos exitosa!");
 				} else {
-					System.out.println("Fallo en la conexión a la base de datos.");
+					log.info("Fallo en la conexión a la base de datos.");
 				}
 			} catch (SQLException e) {
-				System.out.println("Error al conectar a la base de datos: " + e.getMessage());
+				log.info("Error al conectar a la base de datos: " + e.getMessage());
 			}
 		};
 	}

@@ -1,4 +1,4 @@
-package com.aniview.aniview.Controller;
+package com.aniview.aniview.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aniview.aniview.Service.AIChatService;
+import com.aniview.aniview.service.AIChatService;
 
 @RestController
 @RequestMapping("/api/groq")

@@ -1,19 +1,24 @@
-package com.aniview.aniview.Service;
+package com.aniview.aniview.service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.aniview.aniview.DTO.AnimeDTO;
-import com.aniview.aniview.Entity.Anime;
-import com.aniview.aniview.Repository.AnimeRepository;
+import com.aniview.aniview.dto.AnimeDTO;
+import com.aniview.aniview.entity.Anime;
+import com.aniview.aniview.repository.AnimeRepository;
 
 @Service
 public class AnimeService {
+
+    private static final Logger log = LoggerFactory.getLogger(AnimeService.class);
+    private static final SecureRandom secureRandom = new SecureRandom(); // Reemplaza Random por SecureRandom
 
     private final AnimeRepository animeRepository;
 
@@ -33,7 +38,7 @@ public class AnimeService {
     }
 
     public List<AnimeDTO> findByGenre(String genre) {
-        System.out.println("genre: " + genre);
+        log.info("genre: " + genre);
         if (genre == null || genre.isEmpty()) {
             throw new IllegalArgumentException("Debe seleccionar un género.");
         }
@@ -52,24 +57,22 @@ public class AnimeService {
     }
 
     public Optional<AnimeDTO> findRandomAnimeByGenres(List<String> genres) {
-        Random random = new Random();
-
         if (genres == null || genres.isEmpty()) {
             List<AnimeDTO> allAnimes = getAllAnimes();
             if (allAnimes.isEmpty()) {
                 return Optional.empty();
             }
-            return Optional.of(allAnimes.get(random.nextInt(allAnimes.size())));
+            return Optional.of(allAnimes.get(secureRandom.nextInt(allAnimes.size())));
         }
 
-        String randomGenre = genres.get(random.nextInt(genres.size()));
+        String randomGenre = genres.get(secureRandom.nextInt(genres.size()));
         List<AnimeDTO> matchingAnimes = findByGenre(randomGenre);
 
         if (matchingAnimes.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(matchingAnimes.get(random.nextInt(matchingAnimes.size())));
+        return Optional.of(matchingAnimes.get(secureRandom.nextInt(matchingAnimes.size())));
     }
 
     public AnimeDTO addAnime(Anime anime) {
@@ -96,16 +99,14 @@ public class AnimeService {
     }
 
     public Optional<AnimeDTO> findRandomAnime() {
-        Random random = new Random();
-
-        List<AnimeDTO> allAnimes = getAllAnimes(); // Obtiene todos los animes
+        List<AnimeDTO> allAnimes = getAllAnimes();
         if (allAnimes.isEmpty()) {
-            return Optional.empty(); // Si no hay animes, retorna Optional vacío
+            return Optional.empty();
         }
 
-        // Selecciona un anime aleatorio
-        AnimeDTO randomAnime = allAnimes.get(random.nextInt(allAnimes.size()));
-        return Optional.of(randomAnime); // Retorna el anime aleatorio envuelto en Optional
+        // Selecciona un anime aleatorio con SecureRandom
+        AnimeDTO randomAnime = allAnimes.get(secureRandom.nextInt(allAnimes.size()));
+        return Optional.of(randomAnime);
     }
 
     public boolean deleteAnime(UUID id) {

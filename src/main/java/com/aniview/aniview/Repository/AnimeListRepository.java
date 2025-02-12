@@ -1,11 +1,12 @@
-package com.aniview.aniview.Repository;
-
-import com.aniview.aniview.Entity.AnimeList;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+package com.aniview.aniview.repository;
 
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.aniview.aniview.entity.AnimeList;
 
 @Repository
 public interface AnimeListRepository extends JpaRepository<AnimeList, UUID> {

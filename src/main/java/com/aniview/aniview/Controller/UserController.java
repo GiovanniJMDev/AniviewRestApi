@@ -1,4 +1,4 @@
-package com.aniview.aniview.Controller;
+package com.aniview.aniview.controller;
 
 import java.util.Map;
 import java.util.UUID;
@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aniview.aniview.DTO.PasswordChangeDTO;
-import com.aniview.aniview.DTO.UserDTO;
-import com.aniview.aniview.Entity.User;
-import com.aniview.aniview.Service.TokenService;
-import com.aniview.aniview.Service.UserService;
+import com.aniview.aniview.dto.UserDTO;
+import com.aniview.aniview.entity.User;
+import com.aniview.aniview.service.TokenService;
+import com.aniview.aniview.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")

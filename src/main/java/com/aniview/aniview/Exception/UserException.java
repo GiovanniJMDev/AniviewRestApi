@@ -1,4 +1,4 @@
-package com.aniview.aniview.Exception;
+package com.aniview.aniview.exception;
 
 public class UserException extends RuntimeException {
     public UserException(String message) {
