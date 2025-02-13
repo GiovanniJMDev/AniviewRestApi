@@ -30,16 +30,17 @@ public class AnimeListController {
 
     // Create
     @PostMapping
-    public ResponseEntity<?> createAnimeList(@RequestBody AnimeListDTO animeListDTO) {
+    public ResponseEntity<Map<String, Object>> createAnimeList(@RequestBody AnimeListDTO animeListDTO) {
         try {
             AnimeListDTO createdList = animeListService.createAnimeList(animeListDTO);
-            return ResponseEntity.ok(createdList);
+            return ResponseEntity.ok(Map.of("message", "Anime list created successfully", "data", createdList));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", e.getMessage()));
+                    .body(Map.of("error", "Not Found", "message", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message", "Error creating anime list: " + e.getMessage()));
+                    .body(Map.of("error", "Internal Server Error", "message",
+                            "Error creating anime list: " + e.getMessage()));
         }
     }
 
@@ -63,15 +64,15 @@ public class AnimeListController {
 
     // Update
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAnimeList(
+    public ResponseEntity<Map<String, Object>> updateAnimeList(
             @PathVariable UUID id,
             @RequestBody AnimeListDTO animeListDTO) {
         try {
             AnimeListDTO updated = animeListService.updateAnimeList(id, animeListDTO);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(Map.of("message", "Anime list updated successfully", "data", updated));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", e.getMessage()));
+                    .body(Map.of("error", "Not Found", "message", e.getMessage()));
         }
     }
 

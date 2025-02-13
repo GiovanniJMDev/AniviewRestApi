@@ -15,16 +15,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.aniview.aniview.security.JWTAuthorizationFilter;
 
-import jakarta.servlet.Filter;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final ApiKeysConfig apiKeysConfig;
+    private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
-    public SecurityConfig(ApiKeysConfig apiKeysConfig) {
-        this.apiKeysConfig = apiKeysConfig;
+    // Constructor para inyectar el filtro
+    public SecurityConfig(JWTAuthorizationFilter jwtAuthorizationFilter) {
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 
     @Bean
@@ -35,8 +34,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/groq/chat").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new JWTAuthorizationFilter(apiKeysConfig),
-                        (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // Filtro
+                                                                                                      // registrado aquí
         return http.build();
     }
 

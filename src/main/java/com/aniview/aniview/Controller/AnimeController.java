@@ -1,5 +1,6 @@
 package com.aniview.aniview.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,35 +42,37 @@ public class AnimeController {
     }
 
     @GetMapping("/genre")
-    public ResponseEntity<?> handleMissingGenre() {
+    public ResponseEntity<String> handleMissingGenre() {
         return ResponseEntity.badRequest().body("Debe seleccionar un género.");
     }
 
     @GetMapping("/genre/{genre}")
-    public ResponseEntity<?> getAnimesByGenre(@PathVariable String genre) {
-        try {
-            List<AnimeDTO> animes = animeService.findByGenre(genre);
-            return ResponseEntity.ok(animes);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<List<AnimeDTO>> getAnimesByGenre(@PathVariable String genre) {
+        if (genre == null || genre.isBlank()) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
         }
-    }    
+
+        List<AnimeDTO> animes = animeService.findByGenre(genre);
+        return animes.isEmpty()
+                ? ResponseEntity.badRequest().body(Collections.emptyList())
+                : ResponseEntity.ok(animes);
+    }
 
     @GetMapping("/random")
     public ResponseEntity<AnimeDTO> getRandomAnimeByGenres(@RequestParam(required = false) List<String> genres) {
-        // Si la lista de géneros está vacía o no se pasa, busca un anime aleatorio sin filtro de género
+        // Si la lista de géneros está vacía o no se pasa, busca un anime aleatorio sin
+        // filtro de género
         if (genres == null || genres.isEmpty()) {
             return animeService.findRandomAnime()
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
         }
-    
+
         // Si se pasan géneros, busca un anime aleatorio que coincida con los géneros
         return animeService.findRandomAnimeByGenres(genres)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
 
     @PostMapping
     public ResponseEntity<AnimeDTO> addAnime(@RequestBody Anime anime) {

@@ -5,12 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.aniview.aniview.config.ApiKeysConfig;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -22,15 +22,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    private final String secretKey;
-    // todas las APIs
-    private static final String COOKIE_NAME = "AUTH_TOKEN";
+    @Value("${jwt.secretKey}") // Asegúrate de que el secretKey esté en application.properties
+    private String secretKey;
 
-    public JWTAuthorizationFilter(ApiKeysConfig apiKeysConfig) {
-        this.secretKey = apiKeysConfig.getSecretKey();
-    }
+    private static final String COOKIE_NAME = "AUTH_TOKEN";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -47,7 +45,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
             }
         } catch (JwtException e) {
-            // Si el token es inválido, se limpia el contexto y se devuelve un 403
             SecurityContextHolder.clearContext();
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("Token inválido o expirado");
@@ -63,7 +60,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean checkJWTToken(HttpServletRequest request) {
-        // Verificar si hay cookies y si contienen el AUTH_TOKEN
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (COOKIE_NAME.equals(cookie.getName())) {
@@ -75,7 +71,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private Claims validateToken(HttpServletRequest request) {
-        // Si no hay cookies, devolver null directamente
         if (request.getCookies() == null) {
             return null;
         }

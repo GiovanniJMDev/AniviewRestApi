@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,19 +30,7 @@ public class UserController {
         this.tokenService = tokenService; // Inyectamos el TokenService
     }
 
-    @PostMapping
-    // public ResponseEntity<?> createUser(@RequestBody User user) {
-    // try {
-    // UserDTO createdUser = userService.createUser(user);
-    // return ResponseEntity.ok()
-    // .body(Map.of(
-    // "message", "Usuario creado exitosamente",
-    // "user", createdUser));
-    // } catch (Exception e) {
-    // return ResponseEntity.badRequest()
-    // .body("Error al crear usuario: " + e.getMessage());
-    // }
-    // }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable UUID id) {
