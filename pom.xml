@@ -138,8 +138,6 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.10.0.2594</version> <!-- Asegúrate de usar la última versión -->
             </plugin>
-
-
         </plugins>
     </build>
 
