@@ -77,13 +77,22 @@ public class AnimeListItemService {
     }
 
     @Transactional
-    public AnimeListItemDTO updateAnimeListItem(UUID id, AnimeListItemDTO dto) {
+    public AnimeListItemDTO updateAnimeListItem(UUID id, UUID newAnimeListId) {
+        // Buscar el AnimeListItem por su ID
         AnimeListItem item = animeListItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AnimeListItem no encontrado"));
 
-        // item.setUpdatedAt(Instant.now());
+        // Buscar la nueva lista de anime usando el nuevo animeListId
+        AnimeList newAnimeList = animeListService.findAnimeListById(newAnimeListId)
+                .orElseThrow(() -> new ResourceNotFoundException("AnimeList no encontrado con id: " + newAnimeListId));
 
+        // Actualizar la relación del AnimeList en el AnimeListItem
+        item.setAnimeList(newAnimeList); // Establecemos la nueva lista de anime
+
+        // Guardar el AnimeListItem actualizado
         AnimeListItem saved = animeListItemRepository.save(item);
+
+        // Convertir el objeto AnimeListItem a AnimeListItemDTO para devolverlo
         return convertToDTO(saved);
     }
 

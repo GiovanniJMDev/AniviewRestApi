@@ -51,9 +51,9 @@ public class AnimeListItemController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AnimeListItemDTO> updateAnimeListItem(
-            @PathVariable UUID id,
-            @RequestBody AnimeListItemDTO dto) {
-        AnimeListItemDTO updated = animeListItemService.updateAnimeListItem(id, dto);
+            @PathVariable UUID id, // Recibes el ID del AnimeListItem
+            @RequestBody UUID newAnimeListId) { // Ahora solo recibes el nuevo UUID en el cuerpo
+        AnimeListItemDTO updated = animeListItemService.updateAnimeListItem(id, newAnimeListId);
         return ResponseEntity.ok(updated);
     }
 
@@ -62,4 +62,4 @@ public class AnimeListItemController {
         animeListItemService.deleteAnimeListItem(id);
         return ResponseEntity.noContent().build();
     }
-} 
+}
