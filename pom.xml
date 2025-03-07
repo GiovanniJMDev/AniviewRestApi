@@ -31,8 +31,8 @@
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>aniview-rest-api</sonar.projectKey>
-        <sonar.login>${SONAR_TOKEN}</sonar.login>
+        <sonar.projectKey>Aniview-RestApi</sonar.projectKey>
+        <sonar.login>${SONAR_TOKEN_HOME}</sonar.login>
     </properties>
     <dependencies>
         <dependency>

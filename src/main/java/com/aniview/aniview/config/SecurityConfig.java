@@ -15,6 +15,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.aniview.aniview.security.JWTAuthorizationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -31,11 +33,25 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/groq/chat").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // Filtro
-                                                                                                      // registrado aquí
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/api/groq/chat").permitAll() // Rutas públicas
+                        .anyRequest().authenticated()) // Rutas privadas
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // Asegúrate de que
+                                                                                                     // el filtro JWT
+                                                                                                     // esté antes
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // Si hay un error de autenticación, responde con un JSON
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"No autorizado\"}");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            // Si hay un error de acceso denegado, responde con un JSON
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"Acceso denegado\"}");
+                        }));
         return http.build();
     }
 

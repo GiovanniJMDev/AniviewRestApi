@@ -46,13 +46,17 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }
         } catch (JwtException e) {
             SecurityContextHolder.clearContext();
+            // Establecer tipo de contenido JSON
+            response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Token inválido o expirado");
+            response.getWriter().write("{\"message\": \"Token inválido o expirado\"}");
             return;
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
+            // Establecer tipo de contenido JSON
+            response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Error en la autenticación: " + e.getMessage());
+            response.getWriter().write("{\"message\": \"Error en la autenticación: " + e.getMessage() + "\"}");
             return;
         }
 

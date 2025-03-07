@@ -5,14 +5,16 @@ meta {
 }
 
 put {
-  url: http://localhost:8080/api/anime-list-items/258a3564-e4f0-4eb2-8554-0f939ce32fd1
+  url: http://localhost:8080/api/anime-list-items/:id
   body: json
   auth: none
 }
 
+params:path {
+  id: 6447035f-d827-48ad-9b1f-dafcc1cba093
+}
+
 body:json {
-  {
-    "animeListId": "258a3564-e4f0-4eb2-8554-0f939ce32fd1",
-    "animeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-  }
+  "6caa519b-8655-49fe-8d29-78fcfbaee229"
+  
 }
